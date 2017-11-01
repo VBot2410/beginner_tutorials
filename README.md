@@ -30,7 +30,7 @@ $ source devel/setup.bash
 Clone the package in src folder of catkin workspace using following commands:
 ```
 $ cd ~/catkin_ws/src/
-$ https://github.com/VBot2410/beginner_tutorials.git
+$ git clone https://github.com/VBot2410/beginner_tutorials.git
 ```
 Then build the package using following commands:
 ```
