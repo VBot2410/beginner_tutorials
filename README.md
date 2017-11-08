@@ -38,26 +38,27 @@ $ cd ~/catkin_ws/
 $ catkin_make
 ```
 ## Running The Demo
-Make sure that a roscore is up and running:
-```
-$ roscore
-```
-make sure you have sourced your workspace's setup.sh file after calling catkin_make but before trying to use your applications:
+Open a terminal and run following commands:
 ```
 $ cd ~/catkin_ws
-$ source ./devel/setup.bash
+$ source devel/setup.bash
+$ roslaunch beginner_tutorials Tutorial.launch
 ```
-### Running the Publisher
-Open a new terminal and run following commands:
+You may also specify custom message and Frequency by using **arg:=value**. For example, to launch with Message "Hi!" & Frequency 100Hz,
 ```
-$ cd ~/catkin_ws
-$ source ./devel/setup.bash
-$ rosrun beginner_tutorials talker
+roslaunch beginner_tutorials Tutorial.launch Message:="Hi!" Frequency:=100
 ```
-### Running the Subscriber
-Open a new terminal and run following commands:
+For the custom message to take effect, open a new terminal & follow these instructions:
 ```
 $ cd ~/catkin_ws
-$ source ./devel/setup.bash
-$ rosrun beginner_tutorials listener
+$ source devel/setup.bash
+$ rosrun beginner_tutorials modify
 ```
+### Using rosservice to call the service
+Open a new terminal after following the above instructions for running the Demo
+```
+$ cd ~/catkin_ws
+$ source devel/setup.bash
+rosservice call /String_Modify Message:"Modified String"
+```
+The message broadcasted by talker will be changed to "Modified String". You may use any custom string while using above command.
