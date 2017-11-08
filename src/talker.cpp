@@ -36,7 +36,7 @@
 
 //  string to store the message
 //  default initialization to "Hi! Default Message!"
-std::string Msg_Str("Hi! Default Message! ");
+extern std::string Msg_Str("Hi! Default Message! ");
 
 /**
  * @brief      function to handle service
@@ -110,7 +110,6 @@ int main(int argc, char **argv) {
     }
   }
   ros::Rate loop_rate(rate);
-  
   // If ROS
   if (!ros::ok()) {
     ROS_FATAL_STREAM("ROS Node Not Running");
