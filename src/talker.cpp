@@ -32,7 +32,27 @@
 #include <sstream>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "beginner_tutorials/String_Modify.h"
 
+//  string to store the message
+//  default initialization to "Hi! Default Message!"
+std::string Msg_Str("Hi! Default Message! ");
+
+/**
+ * @brief      function to handle service
+ *
+ * @param      Req   The request
+ * @param      Res   The response
+ *
+ * @return     returns true upon successful execution
+ */
+bool modify(beginner_tutorials::String_Modify::Request  &Req,
+            beginner_tutorials::String_Modify::Request  &Res) {
+  ROS_WARN("Modifying Message");
+  Msg_Str = Req.Message;
+  ROS_INFO("Message Modification Successful");
+  return true;
+}
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
@@ -76,7 +96,25 @@ int main(int argc, char **argv) {
    */
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
 
-  ros::Rate loop_rate(1);
+  /**
+   * This creates the service.
+   */
+  ros::ServiceServer service = n.advertiseService("String_Modify", modify);
+  //  variable to store loop frequency
+  int rate(1);
+  // Load parameter
+  if (n.hasParam("Custom_Frequency")) {
+    ROS_INFO("Frequency Parameter available");
+    if (n.getParam("Custom_Frequency", rate)) {
+      ROS_WARN("Updating Frequency \n");
+    }
+  }
+  ros::Rate loop_rate(rate);
+  
+  // If ROS
+  if (!ros::ok()) {
+    ROS_FATAL_STREAM("ROS Node Not Running");
+  }
 
   /**
    * A count of how many messages we have sent. This is used to create
@@ -90,7 +128,7 @@ int main(int argc, char **argv) {
     std_msgs::String msg;
 
     std::stringstream ss;
-    ss << "Hi! Vaibhav's Custom Message! " << count;
+    ss << Msg_Str << ":\t" << count;
     msg.data = ss.str();
 
     ROS_INFO("%s", msg.data.c_str());
