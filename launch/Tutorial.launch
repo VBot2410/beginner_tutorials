@@ -1,0 +1,28 @@
+<launch>
+	<arg name="Frequency"	default="1"/>
+	<arg name="Message"	default="Hi! Default Message"/>
+
+	<param name="Custom_Frequency" value="$(arg Frequency)"> </param>
+	<param name="msg" value="$(arg Message)"> </param>
+	<!--
+	<env name="ROSCONSOLE_CONFIG_FILE"
+       value="$(find beginner_tutorials)/config/custom.conf"/>
+	-->
+	<node 
+	     name="talker"
+	     pkg="beginner_tutorials"
+             type="talker"
+             output="screen"
+	     launch-prefix="gnome-terminal --command"
+
+        />
+		
+	<node
+             name="listener"
+             pkg="beginner_tutorials"
+             type="listener"
+             output="screen"
+	     launch-prefix="gnome-terminal --command"
+	/>
+	
+</launch>
