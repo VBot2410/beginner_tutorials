@@ -1,5 +1,7 @@
 # beginner_tutorials
-ROS Beginner Tutorials
+ROS Beginner Tutorials<br />
+<br />
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ## Overview
 This project contains a ROS package named "beginner_tutorials".<br />
 This project covers a tutorial on how to write a simple publisher and subscriber node in C++.<br />
