@@ -29,12 +29,13 @@
 
 
 /* --Includes-- */
+#include <tf/transform_broadcaster.h>
 #include <sstream>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "beginner_tutorials/String_Modify.h"
 
-//  string to store the message
+//  Initialize a string to store the message
 //  default initialization to "Hi! Default Message!"
 extern std::string Msg_Str("Hi! Default Message! ");
 
@@ -44,19 +45,28 @@ extern std::string Msg_Str("Hi! Default Message! ");
  * @param      Req   The request
  * @param      Res   The response
  *
- * @return     returns true upon successful execution
+ * @return     bool  returns true upon successful message modification
  */
 bool modify(beginner_tutorials::String_Modify::Request  &Req,
-            beginner_tutorials::String_Modify::Request  &Res) {
+            beginner_tutorials::String_Modify::Response  &Res) {
   ROS_WARN("Modifying Message");
   Msg_Str = Req.Message;
+  Res.MessageResponse = Req.Message;
   ROS_INFO("Message Modification Successful");
   return true;
 }
 
 /**
- * This tutorial demonstrates simple sending of messages over the ROS system.
+ * @brief      main() program entrypoint
+ *  This tutorial demonstrates simple sending of messages over the ROS system.
+ *
+ * @param      argc  The argc
+ * @param      argv  The argv
+ *
+ * @return     integer 0 upon exit success
+ *             integer -1 upon exit failure
  */
+
 int main(int argc, char **argv) {
   /**
    * The ros::init() function needs to see argc and argv so that it can perform
@@ -76,6 +86,13 @@ int main(int argc, char **argv) {
    * NodeHandle destructed will close down the node.
    */
   ros::NodeHandle n;
+
+  //  Create a TransformBroadcaster object used to send the transformations
+  tf::TransformBroadcaster br;
+
+  tf::Transform transform;  //  Create a Transform object
+  tf::Quaternion q;  //  Create a quaternion
+
 
   /**
    * The advertise() function is how you tell ROS that you want to
@@ -120,14 +137,34 @@ int main(int argc, char **argv) {
    * a unique string for each message.
    */
   int count = 0;
+
+  // Radius of Rotation
+  double R = 2;
+
+  // Angular Velocity
+  double w = 3.14;  // Set Angular Velocity to 3.14
+
   while (ros::ok()) {
+    // Get current Time in seconds
+    double t = ros::Time::now().toSec();
+
+    double X = R*cos(w*t);  // Circle's X Coordinate
+    double Y = R*sin(w*t);  // Circle's Y Coordinate
+
+    // set Origin
+    transform.setOrigin(tf::Vector3(X, Y, 3.0));
+
+    double Theta = w*t;
+    q.setRPY(90, 90, Theta);
+    transform.setRotation(q);  //  Here we set the rotation
+
     /**
      * This is a message object. You stuff it with data, and then publish it.
      */
     std_msgs::String msg;
 
     std::stringstream ss;
-    ss << Msg_Str << ":\t" << count;
+    ss << Msg_Str << "\t" << count;
     msg.data = ss.str();
 
     ROS_INFO("%s", msg.data.c_str());
@@ -139,7 +176,8 @@ int main(int argc, char **argv) {
      * in the constructor above.
      */
     chatter_pub.publish(msg);
-
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "/world",
+                                          "/talk"));
     ros::spinOnce();
 
     loop_rate.sleep();

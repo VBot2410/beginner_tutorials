@@ -1,2 +1,5 @@
 # Incoming parameter of the service.
 string Message
+---
+# Response of the service.
+string MessageResponse

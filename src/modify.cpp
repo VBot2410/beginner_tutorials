@@ -39,7 +39,7 @@
  * @param      argc  The argc
  * @param      argv  The argv
  *
- * @return     integer 0 upon exit success \n
+ * @return     integer 0 upon exit success
  *            integer -1 upon exit failure
  */
 int main(int argc, char **argv) {
@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
   if (client.call(srv)) {
     ROS_DEBUG("Successfully Modified the Message");
   } else {
-    ROS_ERROR("Failed to call Service String_Modify");
+    ROS_ERROR("Failed to call the Service String_Modify");
     return -1;
   }
   return 0;
